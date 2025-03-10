@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  chromecasttosonos:
+    image: chromecasttosonos:latest
+    build:
+      context: .
+      dockerfile: ChromecastToSonos/Dockerfile
+    network_mode: host
+    ports:
+      - "8080:8080/udp"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

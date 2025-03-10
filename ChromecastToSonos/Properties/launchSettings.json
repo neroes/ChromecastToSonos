@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ChromecastToSonos": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
