@@ -26,7 +26,7 @@ namespace ChromecastToSonos
 
         private void AdvertiseChromecast()
         {
-            var serviceProfile = new ServiceProfile("VirtualChromecast", "_googlecast._tcp", 8080)
+            var serviceProfile = new ServiceProfile("VirtualChromecast", "_googlecast._tcp", 8009)
             {
                 HostName = Dns.GetHostName()
             };
@@ -48,9 +48,9 @@ namespace ChromecastToSonos
         private async Task StartListener()
         {
             HttpListener listener = new HttpListener();
-            listener.Prefixes.Add($"http://{_sonos.IpAddress}:8080/");
+            listener.Prefixes.Add($"http://{_sonos.IpAddress}:8009/");
             listener.Start();
-            Console.WriteLine($"VirtualChromecast started for Sonos device at {_sonos.IpAddress}, listening on port 8080...");
+            Console.WriteLine($"VirtualChromecast started for Sonos device at {_sonos.IpAddress}, listening on port 8009...");
 
             while (true)
             {
