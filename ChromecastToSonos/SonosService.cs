@@ -1,4 +1,6 @@
 ﻿using Makaretu.Dns;
+using System.Net;
+using System.Text.Json;
 
 namespace ChromecastToSonos
 {
@@ -6,11 +8,15 @@ namespace ChromecastToSonos
     {
         private List<Sonos> _sonosDevices;
         private List<VirtualChromecast> _virtualChromecasts;
+        
 
         public SonosService()
         {
+            //Console.SetOut(new StreamWriter(new FileStream("sonos_service_log.txt", FileMode.Append, FileAccess.Write)) { AutoFlush = true });
+
             _sonosDevices = DiscoverSonosDevices().Result;
             _virtualChromecasts = new List<VirtualChromecast>();
+
 
             foreach (var sonos in _sonosDevices)
             {
@@ -27,14 +33,42 @@ namespace ChromecastToSonos
             var serviceDiscovery = new ServiceDiscovery();
             var mdns = new MulticastService();
             var startTime = DateTime.Now;
-            
+
+            //serviceDiscovery.ServiceDiscovered += (s, serviceName) =>
+            //{
+            //    Console.WriteLine($"service '{serviceName}'");
+            //};
+            //serviceDiscovery.QueryAllServices();
+
+            //serviceDiscovery.ServiceInstanceDiscovered += (s, e) =>
+            //{
+            //    //Console.WriteLine($"service instance '{e.ServiceInstanceName}'");
+            //    //Console.WriteLine($"service message: '{e.Message}'");
+            //};
+            //serviceDiscovery.QueryServiceInstances("_sonos._tcp.local");
+
+            //mdns.AnswerReceived += (s, e) =>
+            //{
+            //    var answers = e.Message.Answers;
+            //    var services = answers.OfType<AddressRecord>();
+            //    foreach (var service in services)
+            //    {
+            //        if (service.Name.Labels[0].StartsWith("Sonos-"))
+            //        {
+            //            Console.WriteLine($"service IP'{service.Address.ToString()}'");
+            //            var timeElapsed = DateTime.Now - startTime;
+            //            Console.WriteLine($"TimeElapsed '{timeElapsed.TotalMilliseconds}'");
+            //        }
+            //    }
+            //};
+
             /*mdns.NetworkInterfaceDiscovered += (s, e) =>
             {
 
                 // Ask for the name of all services.
                 serviceDiscovery.QueryAllServices();
             };*/
-
+            /*
             mdns.AnswerReceived += (s, e) =>
             {
                 // Is this an answer to a service instance details?
@@ -73,11 +107,19 @@ namespace ChromecastToSonos
                         Console.WriteLine($"TimeElapsed '{timeElapsed.TotalMilliseconds}'");
                     }
                 }
-            };
+            };*/
 
             try
             {
+                //var service = "_sonos._tcp.local";
+                //var query = new Message();
+                //query.Questions.Add(new Question { Name = service, Type = DnsType.ANY, Class = DnsClass.IN });
+                //var cancellation = new CancellationTokenSource(20000);
+
                 mdns.Start();
+                //var response = await mdns.ResolveAsync(query, cancellation.Token);
+                mdns.SendQuery("_sonos._tcp.local");
+                //Console.WriteLine(JsonSerializer.Serialize(response));
                 await Task.Delay(120000); // Wait for responses
             }
             finally
